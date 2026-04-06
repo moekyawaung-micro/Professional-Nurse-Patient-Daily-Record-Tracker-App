@@ -1,0 +1,71 @@
+{
+  "app": {
+    "title": "ระบบบันทึกรายวันผู้ป่วย-พยาบาล",
+    "subtitle": "ระบบบันทึกผู้ป่วยแบบมืออาชีพ",
+    "tagline": "บันทึกข้อมูลสุขภาพผู้ป่วยอย่างครบถ้วน"
+  },
+  "navigation": {
+    "dashboard": "แดชบอร์ด",
+    "patients": "ผู้ป่วย",
+    "vitals": "สัญญาณชีพ",
+    "medications": "ยา",
+    "notes": "บันทึก",
+    "reports": "รายงาน",
+    "schedule": "ตารางเวลา",
+    "profile": "โปรไฟล์"
+  },
+  "patient": {
+    "title": "ข้อมูลผู้ป่วย",
+    "id": "หมายเลขผู้ป่วย",
+    "name": "ชื่อ",
+    "age": "อายุ",
+    "gender": "เพศ",
+    "bloodType": "กรุ๊ปเลือด",
+    "admission": "วันเข้ารักษา",
+    "ward": "ห病",
+    "doctor": "แพทย์",
+    "allergies": "สิ่งที่แพ้",
+    "medicalHistory": "ประวัติการรักษา",
+    "conditions": "สภาวะโรค",
+    "phone": "โทรศัพท์",
+    "contact": "ผู้ติดต่อ",
+    "address": "ที่อยู่"
+  },
+  "vitals": {
+    "title": "สัญญาณชีพ",
+    "temperature": "อุณหภูมิ",
+    "heartRate": "อัตราการเต้นหัวใจ",
+    "bloodPressure": "ความดันโลหิต",
+    "respiratoryRate": "อัตราการหายใจ",
+    "oxygenSaturation": "ความอิ่มตัวของออกซิเจน",
+    "bloodGlucose": "น้ำตาลในเลือด",
+    "weight": "น้ำหนัก",
+    "height": "ส่วนสูง",
+    "bmi": "ดัชนีมวลกาย"
+  },
+  "medications": {
+    "title": "ยา",
+    "name": "ชื่อยา",
+    "dosage": "ปริมาณ",
+    "frequency": "ความถี่",
+    "route": "เส้นทาง",
+    "startDate": "วันเริ่ม",
+    "endDate": "วันสิ้นสุด",
+    "prescribedBy": "สั่งโดย",
+    "reason": "เหตุผล",
+    "sideEffects": "ผลข้างเคียง"
+  },
+  "notes": {
+    "title": "บันทึกพยาบาล",
+    "observation": "การสังเกตการณ์",
+    "assessment": "การประเมิน",
+    "plan": "แผน",
+    "intervention": "การแทรกแซง"
+  },
+  "reports": {
+    "title": "รายงาน",
+    "dailyReport": "รายงานรายวัน",
+    "weeklyReport": "รายงานรายสัปดาห์",
+    "monthlyReport": "รายงานรายเดือน"
+  }
+}
