@@ -1,0 +1,23 @@
+{
+  "name": "professional-nurse-patient-tracker",
+  "version": "1.0.0",
+  "description": "Professional Healthcare Record Management System",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server",
+    "build": "webpack",
+    "test": "jest"
+  },
+  "keywords": ["healthcare", "nursing", "patient", "tracking", "medical records"],
+  "author": "Healthcare Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "webpack": "^5.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^3.9.1",
+    "html2pdf": "^0.10.1",
+    "papaparse": "^5.4.1"
+  }
+}
