@@ -1,0 +1,32 @@
+{
+  "medications": [
+    {
+      "id": 1,
+      "name_my": "প্যারાစिটამล်",
+      "name_th": "พาราเซตามอล",
+      "name_en": "Paracetamol",
+      "category": "Analgesic",
+      "doseForm": "Tablet",
+      "strength": "500mg",
+      "commonFrequencies": ["every4Hours", "every6Hours", "every8Hours"],
+      "commonRoutes": ["oral"],
+      "sideEffects": ["ဦးခေါင်းကိုက်ခြင်း", "ည ကနေ အိပ်စက်ခြင်း"],
+      "contraindications": ["Liver disease"],
+      "interactions": []
+    },
+    {
+      "id": 2,
+      "name_my": "အမီုကซီလင်",
+      "name_th": "อะมอกซิซิลลิน",
+      "name_en": "Amoxicillin",
+      "category": "Antibiotic",
+      "doseForm": "Capsule",
+      "strength": "500mg",
+      "commonFrequencies": ["every8Hours"],
+      "commonRoutes": ["oral"],
+      "sideEffects": ["အန်ခြင်း", "ဝမ်းချုပ်ခြင်း"],
+      "contraindications": ["Penicillin allergy"],
+      "interactions": ["Warfarin"]
+    }
+  ]
+}
