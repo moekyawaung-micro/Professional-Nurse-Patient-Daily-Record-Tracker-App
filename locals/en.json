@@ -1,0 +1,71 @@
+{
+  "app": {
+    "title": "Professional Nurse-Patient Daily Tracker",
+    "subtitle": "Healthcare Professional Record Management System",
+    "tagline": "Comprehensive patient care documentation and monitoring"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "vitals": "Vital Signs",
+    "medications": "Medications",
+    "notes": "Notes",
+    "reports": "Reports",
+    "schedule": "Schedule",
+    "profile": "Profile"
+  },
+  "patient": {
+    "title": "Patient Information",
+    "id": "Patient ID",
+    "name": "Name",
+    "age": "Age",
+    "gender": "Gender",
+    "bloodType": "Blood Type",
+    "admission": "Admission Date",
+    "ward": "Ward",
+    "doctor": "Attending Physician",
+    "allergies": "Allergies",
+    "medicalHistory": "Medical History",
+    "conditions": "Current Conditions",
+    "phone": "Phone",
+    "contact": "Emergency Contact",
+    "address": "Address"
+  },
+  "vitals": {
+    "title": "Vital Signs",
+    "temperature": "Temperature",
+    "heartRate": "Heart Rate",
+    "bloodPressure": "Blood Pressure",
+    "respiratoryRate": "Respiratory Rate",
+    "oxygenSaturation": "Oxygen Saturation",
+    "bloodGlucose": "Blood Glucose",
+    "weight": "Weight",
+    "height": "Height",
+    "bmi": "BMI"
+  },
+  "medications": {
+    "title": "Medications",
+    "name": "Medication Name",
+    "dosage": "Dosage",
+    "frequency": "Frequency",
+    "route": "Route",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "prescribedBy": "Prescribed By",
+    "reason": "Indication",
+    "sideEffects": "Side Effects"
+  },
+  "notes": {
+    "title": "Nursing Notes",
+    "observation": "Observation",
+    "assessment": "Assessment",
+    "plan": "Plan",
+    "intervention": "Intervention"
+  },
+  "reports": {
+    "title": "Reports",
+    "dailyReport": "Daily Report",
+    "weeklyReport": "Weekly Report",
+    "monthlyReport": "Monthly Report"
+  }
+}
