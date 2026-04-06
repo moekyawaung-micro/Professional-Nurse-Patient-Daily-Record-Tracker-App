@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Nurse-Patient Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/professional.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>ProCare</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active" data-page="dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" data-page="patients">
+                <i class="fas fa-users"></i>
+                <span>Patients</span>
+            </a>
+            <a href="#" class="menu-item" data-page="vitals">
+                <i class="fas fa-heartbeat"></i>
+                <span>Vital Signs</span>
+            </a>
+            <a href="#" class="menu-item" data-page="medications">
+                <i class="fas fa-pills"></i>
+                <span>Medications</span>
+            </a>
+            <a href="#" class="menu-item" data-page="notes">
+                <i class="fas fa-sticky-note"></i>
+                <span>Notes</span>
+            </a>
+            <a href="#" class="menu-item" data-page="reports">
+                <i class="fas fa-file-chart-line"></i>
+                <span>Reports</span>
+            </a>
+            <a href="#" class="menu-item" data-page="schedule">
+                <i class="fas fa-calendar"></i>
+                <span>Schedule</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="#" class="menu-item" data-page="profile">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search patient...">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="language-selector">
+                <select id="languageSelect">
+                    <option value="my">မြန်မာ</option>
+                    <option value="th">ไทย</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <div class="notifications">
+                <button class="notification-btn" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count" id="notificationCount">0</span>
+                </button>
+                <div class="notification-dropdown hidden" id="notificationDropdown">
+                    <!-- Dynamic notifications -->
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <img id="userAvatar" src="" alt="User" class="avatar">
+                <div class="user-info">
+                    <span id="userName"></span>
+                    <span id="userRole"></span>
+                </div>
+                <button class="profile-menu-btn" id="profileMenuBtn">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <section id="dashboardPage" class="page active">
+            <div class="page-header">
+                <h1 id="dashboardTitle"></h1>
+                <p id="dashboardSubtitle"></p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Patient Overview Cards -->
+                <div class="card stats-card">
+                    <div class="card-header">
+                        <h3>Total Patients</h3>
+                        <button class="more-btn"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                    <div class="stat-value">
+                        <span id="totalPatients">0</span>
+                        <span class="stat-change positive">+5%</span>
+                    </div>
+                    <div class="mini-chart">
+                        <canvas id="patientChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Vitals Alert Card -->
+                <div class="card alert-card">
+                    <div class="card-header">
+                        <h3>Vitals Alerts</h3>
+                        <span class="alert-badge critical">2</span>
+                    </div>
+                    <div id="vitalsAlerts" class="alerts-list">
+                        <!-- Dynamic alerts -->
+                    </div>
+                </div>
+
+                <!-- Medications Due Card -->
+                <div class="card medications-card">
+                    <div class="card-header">
+                        <h3>Medications Due</h3>
+                        <span class="due-count">3</span>
+                    </div>
+                    <div id="medicationsDue" class="medications-list">
+                        <!-- Dynamic medications -->
+                    </div>
+                </div>
+
+                <!-- Scheduled Tasks Card -->
+                <div class="card tasks-card">
+                    <div class="card-header">
+                        <h3>Today's Tasks</h3>
+                    </div>
+                    <div id="tasksList" class="tasks-list">
+                        <!-- Dynamic tasks -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vitals Trend Chart -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <h3>Vitals Trend - This Week</h3>
+                    <div class="chart-controls">
+                        <select id="vitalsMetric">
+                            <option value="temperature">Temperature</option>
+                            <option value="heartRate">Heart Rate</option>
+                            <option value="bloodPressure">Blood Pressure</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="vitalsTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Records -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <h3>Recent Records</h3>
+                    <a href="#" class="view-all-link">View All</a>
+                </div>
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentRecordsBody">
+                        <!-- Dynamic records -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Patients Page -->
+        <section id="patientsPage" class="page hidden">
+            <div class="page-header">
+                <h1 id="patientsTitle"></h1>
+                <button id="addPatientBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Patient
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <select id="wardFilter" class="filter-select">
+                    <option value="">All Wards</option>
+                    <option value="ICU">ICU</option>
+                    <option value="General">General</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                </select>
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="discharged">Discharged</option>
+                </select>
+                <input type="text" id="patientSearch" class="search-input" placeholder="Search...">
+            </div>
+
+            <div class="patients-table-container">
+                <table class="patients-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Ward</th>
+                            <th>Admission</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientsTableBody">
+                        <!-- Dynamic patients -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Vital Signs Page -->
+        <section id="vitalsPage" class="page hidden">
+            <div class="page-header">
+                <h1 id="vitalsTitle"></h1>
+                <button id="recordVitalsBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Record Vitals
+                </button>
+            </div>
+
+            <div class="vitals-controls">
+                <select id="vitalsPatientSelect" class="filter-select">
+                    <option value="">Select Patient</option>
+                </select>
+                <select id="vitalsTimeFrameSelect" class="filter-select">
+                    <option value="today">Today</option>
+                    <option value="thisWeek">This Week</option>
+                    <option value="thisMonth">This Month</option>
+                </select>
+                <button id="printVitalsBtn" class="btn-secondary">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+
+            <div class="vitals-grid" id="vitalsGrid">
+                <!-- Dynamic vital cards -->
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">
+                    <h3>Vitals History</h3>
+                </div>
+                <table class="vitals-table">
+                    <thead>
+                        <tr>
+                            <th>Date/Time</th>
+                            <th>Temperature</th>
+                            <th>HR</th>
+                            <th>BP</th>
+                            <th>RR</th>
+                            <th>SPO2</th>
+                            <th>Recorded By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vitalsHistoryBody">
+                        <!-- Dynamic vitals -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Medications Page -->
+        <section id="medicationsPage" class="page hidden">
+            <div class="page-header">
+                <h1 id="medicationsTitle"></h1>
+                <button id="addMedicationBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Medication
+                </button>
+            </div>
+
+            <div class="medications-controls">
+                <select id="medPatientSelect" class="filter-select">
+                    <option value="">Select Patient</option>
+                </select>
+                <select id="medStatusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+            <div class="medications-list-container">
+                <div id="medicationsList" class="medications-list">
+                    <!-- Dynamic medications -->
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">
+                    <h3>Medication Administration Record</h3>
+                </div>
+                <table class="mar-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Medication</th>
+                            <th>Dose</th>
+                            <th>Route</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Nurse</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marTableBody">
+                        <!-- Dynamic MAR -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Notes Page -->
+        <section id="notesPage" class="page hidden">
+            <div class="page-header">
+                <h1 id="notesTitle"></h1>
+                <button id="addNoteBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Note
+                </button>
+            </div>
+
+            <div class="notes-controls">
+                <select id="notePatientSelect" class="filter-select">
+                    <option value="">Select Patient</option>
+                </select>
+                <select id="noteTypeFilter" class="filter-select">
+                    <option value="">All Types</option>
+                    <option value="observation">Observation</option>
+                    <option value="assessment">Assessment</option>
+                    <option value="plan">Plan</option>
+                </select>
+            </div>
+
+            <div id="notesList" class="notes-list">
+                <!-- Dynamic notes -->
+            </div>
+        </section>
+
+        <!-- Reports Page -->
+        <section id="reportsPage" class="page hidden">
+            <div class="page-header">
+                <h1 id="reportsTitle"></h1>
+            </div>
+
+            <div class="reports-generator">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generate Report</h3>
+                    </div>
+
+                    <div class="report-form">
+                        <div class="form-group">
+                            <label id="reportPatientLabel"></label>
+                            <select id="reportPatientSelect" class="form-select">
+                                <option value="">Select Patient</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="reportTypeLabel"></label>
+                            <select id="reportTypeSelect" class="form-select">
+                                <option value="daily">Daily Report</option>
+                                <option value="weekly">Weekly Report</option>
+                                <option value="monthly">Monthly Report</option>
+                                <option value="vitals">Vitals Trend Report</option>
+                                <option value="medications">Medication Compliance Report</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="dateRangeLabel"></label>
+                            <div class="date-range">
+                                <input type="date" id="reportStartDate" class="form-input">
+                                <span>to</span>
+                                <input type="date" id="reportEndDate" class="form-input">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button id="generateReportBtn" class="btn-primary">
+                                <i class="fas fa-chart-line"></i> Generate
+                            </button>
+                            <button id="previewReportBtn" class="btn-secondary">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button id="exportReportBtn" class="btn-secondary">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reportPreview" class="card hidden">
+                    <div class="card-header">
+                        <h3>Report Preview</h3>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div id="reportContent" class="report-content">
+                        <!-- Dynamic report -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="saved-reports">
+                <h3>Saved Reports</h3>
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Period</th>
+                            <th>Generated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="savedReportsBody">
+                        <!-- Dynamic saved reports -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Schedule Page -->
+        <section id="schedulePage" class="page hidden">
+            <div class="page-header">
+                <h1 id="scheduleTitle"></h1>
+            </div>
+
+            <div class="schedule-view">
+                <div class="schedule-controls">
+                    <button id="prevDayBtn" class="btn-icon"><i class="fas fa-chevron-left"></i></button>
+                    <input type="date" id="scheduleDate" class="date-input">
+                    <button id="nextDayBtn" class="btn-icon"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <div class="schedule-grid" id="scheduleGrid">
+                    <!-- Dynamic schedule -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profilePage" class="page hidden">
+            <div class="page-header">
+                <h1 id="profileTitle"></h1>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img id="profileImage" src="" alt="Profile" class="profile-image">
+                        <div class="profile-info">
+                            <h2 id="profileName"></h2>
+                            <p id="profileRole"></p>
+                            <p id="profileDepartment"></p>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <label>Email</label>
+                            <span id="profileEmail"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone</label>
+                            <span id="profilePhone"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>License No.</label>
+                            <span id="profileLicense"></span>
+                        </div>
+                    </div>
+
+                    <button id="editProfileBtn" class="btn-primary">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h3>Settings</h3>
+                    <div class="setting-item">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span>Enable Notifications</span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Language</label>
+                        <select id="profileLanguageSelect" class="form-select">
+                            <option value="my">မြန်မာ</option>
+                            <option value="th">ไทย</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Add Patient Modal -->
+    <div id="addPatientModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Add New Patient</h2>
+            <form id="addPatientForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Patient Name *</label>
+                        <input type="text" id="patientName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age *</label>
+                        <input type="number" id="patientAge" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select id="patientGender" class="form-select" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Blood Type *</label>
+                        <select id="patientBloodType" class="form-select" required>
+                            <option value="">Select</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Admission Date *</label>
+                        <input type="date" id="patientAdmission" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ward *</label>
+                        <select id="patientWard" class="form-select" required>
+                            <option value="">Select Ward</option>
+                            <option value="ICU">ICU</option>
+                            <option value="General">General</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Allergies</label>
+                    <textarea id="patientAllergies" class="form-textarea"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Save Patient
+                    </button>
+                    <button type="button" class="btn-secondary modal-close-btn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Record Vitals Modal -->
+    <div id="recordVitalsModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Record Vital Signs</h2>
+            <form id="recordVitalsForm">
+                <div class="form-group">
+                    <label>Patient *</label>
+                    <select id="vitalsRecordPatient" class="form-select" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Temperature (°C) *</label>
+                        <input type="number" id="temperature" class="form-input" step="0.1" min="35" max="42" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Heart Rate (bpm) *</label>
+                        <input type="number" id="heartRate" class="form-input" min="0" max="200" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Blood Pressure (mmHg) *</label>
+                        <div class="bp-inputs">
+                            <input type="number" id="bpSystolic" class="form-input" placeholder="Systolic" required>
+                            <span>/</span>
+                            <input type="number" id="bpDiastolic" class="form-input" placeholder="Diastolic" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Respiratory Rate (breaths/min) *</label>
+                        <input type="number" id="respiratoryRate" class="form-input" min="0" max="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Oxygen Saturation (%) *</label>
+                        <input type="number" id="oxygenSaturation" class="form-input" step="0.1" min="0" max="100" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="vitalsNotes" class="form-textarea"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Record Vitals
+                    </button>
+                    <button type="button" class="btn-secondary modal-close-btn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Medication Modal -->
+    <div id="addMedicationModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Add Medication</h2>
+            <form id="addMedicationForm">
+                <div class="form-group">
+                    <label>Patient *</label>
+                    <select id="medPatient" class="form-select" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Medication Name *</label>
+                        <select id="medName" class="form-select" required>
+                            <option value="">Select Medication</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Dosage *</label>
+                        <input type="text" id="medDosage" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Frequency *</label>
+                        <select id="medFrequency" class="form-select" required>
+                            <option value="once">Once Daily</option>
+                            <option value="twice">Twice Daily</option>
+                            <option value="every4Hours">Every 4 Hours</option>
+                            <option value="every6Hours">Every 6 Hours</option>
+                            <option value="every8Hours">Every 8 Hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Route *</label>
+                        <select id="medRoute" class="form-select" required>
+                            <option value="oral">Oral</option>
+                            <option value="iv">IV</option>
+                            <option value="im">IM</option>
+                            <option value="topical">Topical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Date *</label>
+                        <input type="date" id="medStartDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="medEndDate" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Indication/Reason *</label>
+                    <textarea id="medReason" class="form-textarea" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Add Medication
+                    </button>
+                    <button type="button" class="btn-secondary modal-close-btn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div id="addNoteModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Add Nursing Note</h2>
+            <form id="addNoteForm">
+                <div class="form-group">
+                    <label>Patient *</label>
+                    <select id="notePatient" class="form-select" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Note Type *</label>
+                    <select id="noteType" class="form-select" required>
+                        <option value="observation">Observation</option>
+                        <option value="assessment">Assessment</option>
+                        <option value="plan">Plan</option>
+                        <option value="intervention">Intervention</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Content *</label>
+                    <textarea id="noteContent" class="form-textarea" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Save Note
+                    </button>
+                    <button type="button" class="btn-secondary modal-close-btn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Professional Nurse-Patient Tracker. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/patient.js"></script>
+    <script src="js/vitals.js"></script>
+    <script src="js/medications.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
