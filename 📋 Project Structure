@@ -1,0 +1,42 @@
+```
+nurse-patient-tracker/
+├── README.md
+├── package.json
+├── index.html
+├── css/
+│   ├── style.css
+│   ├── professional.css
+│   ├── responsive.css
+│   └── animations.css
+├── js/
+│   ├── main.js
+│   ├── language.js
+│   ├── database.js
+│   ├── patient.js
+│   ├── vitals.js
+│   ├── medications.js
+│   ├── notes.js
+│   ├── charts.js
+│   ├── reports.js
+│   ├── export.js
+│   ├── auth.js
+│   └── utils.js
+├── data/
+│   ├── vitals-template.json
+│   ├── medications.json
+│   ├── conditions.json
+│   └── departments.json
+├── locales/
+│   ├── my.json
+│   ├── th.json
+│   └── en.json
+├── images/
+│   ├── logo.svg
+│   ├── icons/
+│   └── charts/
+└── libraries/
+    ├── chart.min.js
+    ├── jspdf.min.js
+    ├── html2canvas.min.js
+    └── papaparse.min.js
+```
