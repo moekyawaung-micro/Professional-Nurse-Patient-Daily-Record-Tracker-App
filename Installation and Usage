@@ -1,0 +1,12 @@
+# Clone Repository
+git clone https://github.com/yourusername/professional-nurse-tracker.git
+
+# Install Dependencies
+npm install
+
+# Start Development Server
+npm start
+
+# Open in Browser
+http://localhost:80
+80
