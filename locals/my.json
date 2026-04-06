@@ -1,0 +1,150 @@
+{
+  "app": {
+    "title": "သူနာပြု-လူနာ နေ့စဉ် မှတ်တမ်း",
+    "subtitle": "ပညာရှိသူ လူနာ မှတ်တမ်းတင် စနစ်",
+    "tagline": "လူနာ၏ ကျန်းမာရေး အပြုအမှု စုံလင်စွာ မှတ်တမ်းတင်ပါ"
+  },
+  "navigation": {
+    "dashboard": "အုပ်စုခြုံငုံ",
+    "patients": "လူနာများ",
+    "vitals": "အရေးပါသော အညွှန်းကိန်း",
+    "medications": "ဆေးဝါးများ",
+    "notes": "မှတ်ချက်များ",
+    "reports": "အစီရင်ခံစာများ",
+    "schedule": "အချိန်အစီအစဉ်",
+    "profile": "ကိုယ်ရေး အချက်အလက်"
+  },
+  "patient": {
+    "title": "လူနာ အချက်အလက်",
+    "id": "လူနာ နံပါတ်",
+    "name": "နာမည်",
+    "age": "အသက်",
+    "gender": "ကိုယ်ခွန်း",
+    "bloodType": "သွေးအဂ္ဂဟ",
+    "admission": "ဝင်ခြင်း နေ့စွဲ",
+    "ward": "ဆေးခန်း",
+    "doctor": "ဆရာဝန်",
+    "allergies": "ဓာတုတုံ့ပြန်မှု",
+    "medicalHistory": "ရောဂါ သမိုင်းမှတ်တမ်း",
+    "conditions": "ရောဂါ အခြေအနေ",
+    "phone": "ဖုန်းနံပါတ်",
+    "contact": "ဆက်သွယ်ရန် လူ",
+    "address": "နေရှိရာ အမှတ်"
+  },
+  "vitals": {
+    "title": "အရေးပါသော အညွှန်းကိန်း",
+    "temperature": "အပူချိန်",
+    "heartRate": "နှလုံးခုန်ခြင်း နှုန်း",
+    "bloodPressure": "သွေးဖိအားု",
+    "respiratoryRate": "အသက်ရှူခြင်း နှုန်း",
+    "oxygenSaturation": "အောက်ဆီဂျင် ဗလီတည်ချက်",
+    "bloodGlucose": "သွေးသ糖",
+    "weight": "အလေးချိန်",
+    "height": "အရှည်",
+    "bmi": "ခန္ဓာကိုယ် ထည်သည်မျှ စုံချေ",
+    "bloodPressureSystolic": "အများဆုံး",
+    "bloodPressureDiastolic": "အနည်းဆုံး",
+    "unit": "ယူနစ်"
+  },
+  "medications": {
+    "title": "ဆေးဝါးများ",
+    "name": "ဆေးဝါး နာမည်",
+    "dosage": "ပမာဏ",
+    "frequency": "ကြိမ်းကြိုးကြောင်း",
+    "route": "သုံးစွဲ နည်းလမ်း",
+    "startDate": "စတင်ရက်စွဲ",
+    "endDate": "အဆုံး ရက်စွဲ",
+    "prescribedBy": "ညွှန်ကြားသူ",
+    "reason": "ရည်ရွယ်ချက်",
+    "sideEffects": "ဘေးထွက် ဆန်သည့် အရာများ",
+    "notes": "မှတ်ချက်များ",
+    "given": "ပေးထားသည်",
+    "missed": "လျှောဒီးပြီး သွားသည့်",
+    "refused": "ငြင်းပယ်သည့်"
+  },
+  "notes": {
+    "title": "သူနာပြု မှတ်ချက်များ",
+    "observation": "သုံးသပ်ချက်",
+    "assessment": "အဆင့်သတ်မှတ်ခြင်း",
+    "plan": "အစီအစဉ်",
+    "intervention": "ကြားဖြတ်ခြင်း",
+    "response": "တုံ့ပြန်မှု",
+    "time": "အချိန်",
+    "date": "နေ့စွဲ",
+    "nurseName": "သူနာပြု နာမည်"
+  },
+  "vitalsCategories": {
+    "daily": "နေ့စဉ်",
+    "morning": "မနက်ပိုင်း",
+    "afternoon": "နံနက်တဖက်ပိုင်း",
+    "evening": "ညနေပိုင်း",
+    "night": "ည",
+    "preMeal": "အစားမီ",
+    "postMeal": "အစားတဖန်",
+    "preActivity": "လုပ်ဆောင်မှုမီ",
+    "postActivity": "လုပ်ဆောင်မှုတဖန်"
+  },
+  "timeFrames": {
+    "today": "ယနေ့",
+    "yesterday": "မနေ့က",
+    "thisWeek": "ဤအပတ်",
+    "lastWeek": "ယမ်းအပတ်",
+    "thisMonth": "ဤလ",
+    "lastMonth": "ယမ်းလ",
+    "custom": "အခြား"
+  },
+  "reports": {
+    "title": "အစီရင်ခံစာများ",
+    "dailyReport": "နေ့စဉ် အစီရင်ခံစာ",
+    "weeklyReport": "အပတ်စဉ် အစီရင်ခံစာ",
+    "monthlyReport": "လစဉ် အစီရင်ခံစာ",
+    "vitalsTrend": "အရေးပါသော အညွှန်းကိန်း လမ်းကြောင်း",
+    "medicationReport": "ဆေးဝါး အစီရင်ခံစာ",
+    "complianceReport": "အညီအမျှ အစီရင်ခံစာ",
+    "print": "ပုံနှိပ်",
+    "export": "အပ်နှင်းချ"
+  },
+  "measurements": {
+    "celsius": "စင်တီဂရိတ် (°C)",
+    "fahrenheit": "ဖာရင်ဟိုက် (°F)",
+    "kmh": "စင်တီမီတာ (cm)",
+    "inch": "လက်မ (in)",
+    "kg": "ကီလိုဂရမ် (kg)",
+    "lb": "ပାउండ် (lb)",
+    "mmhg": "mmHg"
+  },
+  "frequency": {
+    "once": "တစ်ကြိမ်",
+    "twice": "နှစ်ကြိမ်",
+    "thrice": "သုံးကြိမ်",
+    "everyHour": "နာရီတစ်ခုအကြိမ်",
+    "every2Hours": "နာရီနှစ်ခုအကြိမ်",
+    "every4Hours": "နာရီလေးခုအကြိမ်",
+    "every6Hours": "နာရီခြောက်ခုအကြိမ်",
+    "every8Hours": "နာရီရှစ်ခုအကြိမ်",
+    "every12Hours": "နာရီဆယ်နှစ်ခုအကြိမ်",
+    "beforeMeal": "အစားမီ",
+    "afterMeal": "အစားတဖန်",
+    "bedtime": "အိပ်ခြင်း အချိန်",
+    "asNeeded": "လိုအပ်သည့် အခါ"
+  },
+  "routes": {
+    "oral": "ခါးကျင်း",
+    "intravenous": "သွေးကြောတစ်ဖက်",
+    "intramuscular": "သြရုံတစ်ဖက်",
+    "subcutaneous": "အရေပြားအောက်",
+    "topical": "အပြင်ပိုင်း",
+    "rectal": "အစပိုင်း",
+    "inhalation": "အသက်ရှူခြင်း"
+  },
+  "messages": {
+    "recordAdded": "မှတ်တမ်း ထည့်သွင်း ပြီးပါပြီ",
+    "recordUpdated": "မှတ်တမ်း အဆင့်မြှင့်တင်း ပြီးပါပြီ",
+    "recordDeleted": "မှတ်တမ်း ဖျက်ပြီးပါပြီ",
+    "patientAdded": "လူနာ ထည့်သွင်း ပြီးပါပြီ",
+    "reportGenerated": "အစီရင်ခံစာ ဖန်တီး ပြီးပါပြီ",
+    "exportSuccess": "အပ်နှင်းချခြင်း အောင်မြင်ပါပြီ",
+    "error": "အမှားအယွင်း ဖြစ်ပေါ်ခဲ့သည်",
+    "confirmDelete": "ဖျက်ရန် အတည်ပြုပါ"
+  }
+}
