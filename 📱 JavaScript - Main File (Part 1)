@@ -1,0 +1,528 @@
+// js/main.js
+import { initLanguage, translate } from './language.js';
+import { initDatabase, saveVitals, getVitals, getPatients } from './database.js';
+import { displayDashboard, loadPatients } from './patient.js';
+import { recordVitals } from './vitals.js';
+import { addMedication, getMedicationsDue } from './medications.js';
+import { addNote, getNotes } from './notes.js';
+import { generateReport } from './reports.js';
+import { exportPDF, exportCSV } from './export.js';
+import { checkAuth } from './auth.js';
+
+let currentLanguage = localStorage.getItem('language') || 'my';
+let currentPage = 'dashboard';
+let currentUser = null;
+let patients = [];
+let vitals = [];
+let medications = [];
+let notes = [];
+
+const elements = {
+    sidebar: document.querySelector('.sidebar'),
+    mainContent: document.querySelector('.main-content'),
+    pages: document.querySelectorAll('.page'),
+    menuItems: document.querySelectorAll('.menu-item[data-page]'),
+    languageSelect: document.getElementById('languageSelect'),
+    searchInput: document.getElementById('searchInput'),
+    logoutBtn: document.getElementById('logoutBtn'),
+    sidebarToggle: document.getElementById('sidebarToggle'),
+    menuToggle: document.getElementById('menuToggle'),
+};
+
+// Initialize
+async function init() {
+    // Check authentication
+    const user = checkAuth();
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    currentUser = user;
+    await initLanguage(currentLanguage);
+    initDatabase();
+    setupEventListeners();
+    loadDashboard();
+    updateUserProfile();
+}
+
+function setupEventListeners() {
+    // Navigation
+    elements.menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = item.dataset.page;
+            showPage(page);
+        });
+    });
+
+    // Language
+    elements.languageSelect.addEventListener('change', (e) => {
+        currentLanguage = e.target.value;
+        localStorage.setItem('language', currentLanguage);
+        location.reload();
+    });
+
+    // Search
+    elements.searchInput.addEventListener('input', performSearch);
+
+    // Logout
+    elements.logoutBtn.addEventListener('click', logout);
+
+    // Sidebar toggle
+    elements.sidebarToggle.addEventListener('click', toggleSidebar);
+    elements.menuToggle.addEventListener('click', toggleSidebar);
+
+    // Modal handlers
+    setupModalHandlers();
+
+    // Form handlers
+    setupFormHandlers();
+}
+
+function showPage(page) {
+    currentPage = page;
+    
+    // Update active menu
+    elements.menuItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.page === page);
+    });
+
+    // Hide all pages
+    elements.pages.forEach(p => {
+        p.classList.add('hidden');
+    });
+
+    // Show selected page
+    const selectedPage = document.getElementById(page + 'Page');
+    if (selectedPage) {
+        selectedPage.classList.remove('hidden');
+    }
+
+    // Load page content
+    switch(page) {
+        case 'dashboard':
+            loadDashboard();
+            break;
+        case 'patients':
+            loadPatientsPage();
+            break;
+        case 'vitals':
+            loadVitalsPage();
+            break;
+        case 'medications':
+            loadMedicationsPage();
+            break;
+        case 'notes':
+            loadNotesPage();
+            break;
+        case 'reports':
+            loadReportsPage();
+            break;
+        case 'schedule':
+            loadSchedulePage();
+            break;
+        case 'profile':
+            loadProfilePage();
+            break;
+    }
+
+    // Close sidebar on mobile
+    if (window.innerWidth <= 768) {
+        elements.sidebar.classList.remove('active');
+    }
+}
+
+function loadDashboard() {
+    // Load patients
+    patients = getPatients();
+    vitals = getVitals();
+
+    // Update stats
+    document.getElementById('totalPatients').textContent = patients.length;
+
+    // Display alerts
+    displayVitalsAlerts();
+
+    // Display medications due
+    displayMedicationsDue();
+
+    // Display today's tasks
+    displayTodaysTasks();
+
+    // Create charts
+    createDashboardCharts();
+
+    // Display recent records
+    displayRecentRecords();
+}
+
+function displayVitalsAlerts() {
+    const alertsContainer = document.getElementById('vitalsAlerts');
+    const alerts = vitals.filter(v => {
+        return (v.temperature > 39 || v.temperature < 36) ||
+               (v.heartRate > 120 || v.heartRate < 50) ||
+               (v.oxygenSaturation < 90);
+    });
+
+    alertsContainer.innerHTML = alerts.map(alert => `
+        <div class="alert-item">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">${getPatientName(alert.patientId)}</div>
+                <div class="alert-time">${getAlertMessage(alert)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    if (alerts.length === 0) {
+        alertsContainer.innerHTML = '<p>No critical alerts</p>';
+    }
+}
+
+function displayMedicationsDue() {
+    const medContainer = document.getElementById('medicationsDue');
+    const dueMeds = getMedicationsDue();
+
+    medContainer.innerHTML = dueMeds.slice(0, 5).map(med => `
+        <div class="medication-item">
+            <div class="medication-time">${med.time}</div>
+            <div class="medication-info">
+                <div class="medication-name">${med.name}</div>
+                <div class="medication-dose">${med.dosage} - ${med.patient}</div>
+            </div>
+            <div class="medication-status">
+                <span class="status-badge pending">Pending</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function displayTodaysTasks() {
+    const tasksContainer = document.getElementById('tasksList');
+    const tasks = [
+        { title: 'Morning rounds', status: 'pending' },
+        { title: 'Patient assessments', status: 'pending' },
+        { title: 'Medication administration', status: 'pending' },
+        { title: 'Vital signs recording', status: 'pending' },
+    ];
+
+    tasksContainer.innerHTML = tasks.map((task, index) => `
+        <div class="task-item">
+            <input type="checkbox" id="task-${index}" class="task-checkbox">
+            <label for="task-${index}">${task.title}</label>
+        </div>
+    `).join('');
+}
+
+function createDashboardCharts() {
+    // Temperature trend chart
+    const ctx = document.getElementById('vitalsTrendChart');
+    if (ctx && vitals.length > 0) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: vitals.slice(-7).map(v => v.date),
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: vitals.slice(-7).map(v => v.temperature),
+                    borderColor: '#FF6B6B',
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 36,
+                        max: 40
+                    }
+                }
+            }
+        });
+    }
+}
+
+function displayRecentRecords() {
+    const tbody = document.getElementById('recentRecordsBody');
+    const allRecords = [
+        ...vitals.map(v => ({...v, type: 'Vital Signs'})),
+        ...medications.map(m => ({...m, type: 'Medication'}))
+    ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 10);
+
+    tbody.innerHTML = allRecords.map(record => `
+        <tr>
+            <td>${record.patient}</td>
+            <td>${record.type}</td>
+            <td>${getRecordValue(record)}</td>
+            <td>${new Date(record.timestamp).toLocaleTimeString()}</td>
+            <td><span class="status-indicator ${getStatusClass(record)}">Normal</span></td>
+            <td>
+                <button class="btn-icon" onclick="editRecord('${record.id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function loadPatientsPage() {
+    patients = getPatients();
+    const tbody = document.getElementById('patientsTableBody');
+
+    tbody.innerHTML = patients.map(patient => `
+        <tr>
+            <td>${patient.id}</td>
+            <td>${patient.name}</td>
+            <td>${patient.age}</td>
+            <td>${patient.ward}</td>
+            <td>${patient.admission}</td>
+            <td>${patient.doctor}</td>
+            <td>
+                <span class="status-indicator ${patient.status === 'active' ? 'active' : 'inactive'}">
+                    ${patient.status}
+                </span>
+            </td>
+            <td>
+                <button class="btn-icon" onclick="viewPatient('${patient.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-icon" onclick="editPatient('${patient.id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function loadVitalsPage() {
+    vitals = getVitals();
+    const grid = document.getElementById('vitalsGrid');
+    
+    // Display vital cards
+    const vitalMetrics = ['temperature', 'heartRate', 'bloodPressure', 'respiratoryRate', 'oxygenSaturation'];
+    
+    grid.innerHTML = vitalMetrics.map(metric => {
+        const latestVital = vitals[vitals.length - 1];
+        const value = latestVital?.[metric] || 'N/A';
+        
+        return `
+            <div class="card vital-card">
+                <h4>${translate(`vitals.${metric}`)}</h4>
+                <div class="vital-value">${value}</div>
+                <div class="vital-status">Normal</div>
+            </div>
+        `;
+    }).join('');
+
+    // Display vitals history
+    displayVitalsHistory();
+}
+
+function displayVitalsHistory() {
+    const tbody = document.getElementById('vitalsHistoryBody');
+    
+    tbody.innerHTML = vitals.slice(-10).map(vital => `
+        <tr>
+            <td>${new Date(vital.timestamp).toLocaleString()}</td>
+            <td>${vital.temperature}°C</td>
+            <td>${vital.heartRate} bpm</td>
+            <td>${vital.bloodPressure}</td>
+            <td>${vital.respiratoryRate}</td>
+            <td>${vital.oxygenSaturation}%</td>
+            <td>${vital.recordedBy}</td>
+            <td>
+                <button class="btn-icon" onclick="editVital('${vital.id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function toggleSidebar() {
+    elements.sidebar.classList.toggle('active');
+}
+
+function updateUserProfile() {
+    document.getElementById('userName').textContent = currentUser.name;
+    document.getElementById('userRole').textContent = currentUser.role;
+    document.getElementById('userAvatar').src = currentUser.avatar || 'https://via.placeholder.com/40';
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+}
+
+function performSearch() {
+    const query = elements.searchInput.value.toLowerCase();
+    if (query.length < 2) return;
+
+    // Search across patients
+    const results = patients.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.id.includes(query)
+    );
+
+    console.log('Search results:', results);
+}
+
+function setupModalHandlers() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        }
+    });
+}
+
+function setupFormHandlers() {
+    // Add Patient Form
+    const addPatientForm = document.getElementById('addPatientForm');
+    if (addPatientForm) {
+        addPatientForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveNewPatient();
+        });
+    }
+
+    // Record Vitals Form
+    const recordVitalsForm = document.getElementById('recordVitalsForm');
+    if (recordVitalsForm) {
+        recordVitalsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveNewVitals();
+        });
+    }
+
+    // Add Medication Form
+    const addMedicationForm = document.getElementById('addMedicationForm');
+    if (addMedicationForm) {
+        addMedicationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveNewMedication();
+        });
+    }
+
+    // Add Note Form
+    const addNoteForm = document.getElementById('addNoteForm');
+    if (addNoteForm) {
+        addNoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveNewNote();
+        });
+    }
+}
+
+function saveNewPatient() {
+    const patient = {
+        id: 'P' + Date.now(),
+        name: document.getElementById('patientName').value,
+        age: document.getElementById('patientAge').value,
+        gender: document.getElementById('patientGender').value,
+        bloodType: document.getElementById('patientBloodType').value,
+        admission: document.getElementById('patientAdmission').value,
+        ward: document.getElementById('patientWard').value,
+        allergies: document.getElementById('patientAllergies').value,
+        status: 'active',
+        createdAt: new Date()
+    };
+
+    // Save to database
+    patients.push(patient);
+    showNotification('Patient added successfully');
+    document.getElementById('addPatientModal').classList.add('hidden');
+    loadPatientsPage();
+}
+
+function saveNewVitals() {
+    const vital = {
+        id: 'V' + Date.now(),
+        patientId: document.getElementById('vitalsRecordPatient').value,
+        temperature: parseFloat(document.getElementById('temperature').value),
+        heartRate: parseInt(document.getElementById('heartRate').value),
+        bloodPressure: `${document.getElementById('bpSystolic').value}/${document.getElementById('bpDiastolic').value}`,
+        respiratoryRate: parseInt(document.getElementById('respiratoryRate').value),
+        oxygenSaturation: parseFloat(document.getElementById('oxygenSaturation').value),
+        notes: document.getElementById('vitalsNotes').value,
+        recordedBy: currentUser.name,
+        timestamp: new Date(),
+        date: new Date().toISOString().split('T')[0]
+    };
+
+    vitals.push(vital);
+    saveVitals(vital);
+    showNotification('Vital signs recorded');
+    document.getElementById('recordVitalsModal').classList.add('hidden');
+    loadVitalsPage();
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: var(--success);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 3000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Helper functions
+function getPatientName(patientId) {
+    const patient = patients.find(p => p.id === patientId);
+    return patient?.name || 'Unknown';
+}
+
+function getAlertMessage(alert) {
+    if (alert.temperature > 39) return 'High fever alert';
+    if (alert.temperature < 36) return 'Low temperature alert';
+    if (alert.heartRate > 120) return 'Tachycardia alert';
+    if (alert.oxygenSaturation < 90) return 'Low oxygen saturation';
+    return 'Abnormal vital sign';
+}
+
+function getRecordValue(record) {
+    if (record.type === 'Vital Signs') {
+        return `${record.temperature}°C`;
+    }
+    return record.dosage || 'N/A';
+}
+
+function getStatusClass(record) {
+    return record.temperature ? (record.temperature > 38 ? 'warning' : 'active') : 'inactive';
+}
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', init);
+
+// Export for use in HTML
+window.showPage = showPage;
+window.performSearch = performSearch;
+window.toggleSidebar = toggleSidebar;
+window.logout = logout;
+window.showNotification = showNotification;
