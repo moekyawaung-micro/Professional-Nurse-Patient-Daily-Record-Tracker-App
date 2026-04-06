@@ -1,0 +1,99 @@
+{
+  "vitals": [
+    {
+      "id": "temp",
+      "key": "temperature",
+      "name_my": "အပူချိန်",
+      "name_th": "อุณหภูมิ",
+      "name_en": "Temperature",
+      "unit": "°C/°F",
+      "icon": "🌡️",
+      "normalRange": {
+        "min": 36.5,
+        "max": 37.5
+      },
+      "criticalRange": {
+        "low": 35,
+        "high": 40
+      },
+      "color": {
+        "normal": "#2ECC71",
+        "warning": "#F39C12",
+        "critical": "#E74C3C"
+      }
+    },
+    {
+      "id": "hr",
+      "key": "heartRate",
+      "name_my": "နှလုံးခုန်ခြင်း နှုန်း",
+      "name_th": "อัตราการเต้นหัวใจ",
+      "name_en": "Heart Rate",
+      "unit": "bpm",
+      "icon": "❤️",
+      "normalRange": {
+        "min": 60,
+        "max": 100
+      },
+      "criticalRange": {
+        "low": 40,
+        "high": 150
+      },
+      "color": {
+        "normal": "#2ECC71",
+        "warning": "#F39C12",
+        "critical": "#E74C3C"
+      }
+    },
+    {
+      "id": "bp",
+      "key": "bloodPressure",
+      "name_my": "သွေးဖိအားု",
+      "name_th": "ความดันโลหิต",
+      "name_en": "Blood Pressure",
+      "unit": "mmHg",
+      "icon": "💪",
+      "normalRange": {
+        "systolic": { "min": 90, "max": 120 },
+        "diastolic": { "min": 60, "max": 80 }
+      },
+      "criticalRange": {
+        "systolic": { "low": 80, "high": 180 },
+        "diastolic": { "low": 50, "high": 120 }
+      }
+    },
+    {
+      "id": "rr",
+      "key": "respiratoryRate",
+      "name_my": "အသက်ရှူခြင်း နှုန်း",
+      "name_th": "อัตราการหายใจ",
+      "name_en": "Respiratory Rate",
+      "unit": "breaths/min",
+      "icon": "🫁",
+      "normalRange": {
+        "min": 12,
+        "max": 20
+      },
+      "criticalRange": {
+        "low": 8,
+        "high": 30
+      }
+    },
+    {
+      "id": "spo2",
+      "key": "oxygenSaturation",
+      "name_my": "အောက်ဆီဂျင် ဗလီတည်ချက်",
+      "name_th": "ความอิ่มตัวของออกซิเจน",
+      "name_en": "Oxygen Saturation",
+      "unit": "%",
+      "icon": "💨",
+      "normalRange": {
+        "min": 95,
+        "max": 100
+      },
+      "criticalRange": {
+        "low": 85,
+        "high": 100
+      }
+    }
+  ]
+}
